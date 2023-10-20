@@ -48,7 +48,6 @@ class PlayGame extends Phaser.Scene {
         this.load.image("bullet", "assets/fruits/ninja_star.png");
     }
 
-
     create(){
 
         this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
@@ -58,6 +57,7 @@ class PlayGame extends Phaser.Scene {
         })
 
         this.scoreText = this.add.text(8, 3, "0", {fontSize: "50px", fill: "#ffffff"})
+        this.instructionText = this.add.text(490, 3, "Controls: UP, RIGHT, LEFT", {fontSize: "20px", fill: "#ffffff"})
 
         this.groundGroup.create(60, 970, 'ground');
         this.groundGroup.create(180, 970, 'ground');
@@ -77,14 +77,12 @@ class PlayGame extends Phaser.Scene {
         this.physics.add.overlap(this.monkey, this.fruitGroup, this.collectFruit, null, this);
         this.physics.add.overlap(this.groundGroup, this.bombGroup, this.explodeBomb, null, this);
         
-
         this.bulletGroup = this.physics.add.group({
             defaultKey: 'bullet',
             maxSize: 1
         })
 
         this.physics.add.overlap(this.bombGroup, this.bulletGroup, this.defuseBomb, null, this);
-
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -144,6 +142,7 @@ class PlayGame extends Phaser.Scene {
         bomb.destroy();
         bullet.destroy();
     }
+
     shootBullet() {
             this.bulletGroup.get(this.monkey.x, this.monkey.y);
             this.bulletGroup.setActive(true);
