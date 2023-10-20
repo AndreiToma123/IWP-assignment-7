@@ -1,4 +1,4 @@
-let game;
+let game; //followed example from the lecture video
 
 const gameOption = {
     monkeySpeed: 200,
