@@ -45,6 +45,7 @@ class PlayGame extends Phaser.Scene {
         this.load.image("pear", "assets/fruits/pear.png");
         this.load.image("orange", "assets/fruits/orange.png");
         this.load.image("bomb", "assets/fruits/bomb.png");
+        this.load.image("bullet", "assets/fruits/ninja_star.png");
     }
 
 
@@ -73,8 +74,17 @@ class PlayGame extends Phaser.Scene {
 
         this.fruitGroup = this.physics.add.group({})
         this.bombGroup = this.physics.add.group({})
-        this.physics.add.overlap(this.monkey, this.fruitGroup, this.collectFruit, null, this)
-        this.physics.add.overlap(this.groundGroup, this.bombGroup, this.explodeBomb, null, this)
+        this.physics.add.overlap(this.monkey, this.fruitGroup, this.collectFruit, null, this);
+        this.physics.add.overlap(this.groundGroup, this.bombGroup, this.explodeBomb, null, this);
+        
+
+        this.bulletGroup = this.physics.add.group({
+            defaultKey: 'bullet',
+            maxSize: 1
+        })
+
+        this.physics.add.overlap(this.bombGroup, this.bulletGroup, this.defuseBomb, null, this);
+
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -130,13 +140,28 @@ class PlayGame extends Phaser.Scene {
         this.scene.start("PlayGame");
     }
 
+    defuseBomb(bomb, bullet) {
+        bomb.destroy();
+        bullet.destroy();
+    }
+    shootBullet() {
+            this.bulletGroup.get(this.monkey.x, this.monkey.y);
+            this.bulletGroup.setActive(true);
+            this.bulletGroup.setVisible(true);
+            this.bulletGroup.setVelocityY(-200);
+    }
+
     update() {
+
         if(this.cursors.left.isDown){
             this.monkey.body.velocity.x = -gameOption.monkeySpeed;
         }
         else if(this.cursors.right.isDown){
             this.monkey.body.velocity.x = gameOption.monkeySpeed;
             // this.monkey.flipX = true;
+        }
+        else if(this.cursors.up.isDown){
+            this.shootBullet();
         }
         else{
             this.monkey.body.velocity.x = 0;
